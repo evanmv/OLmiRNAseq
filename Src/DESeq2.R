@@ -29,6 +29,7 @@ all(row.names(colData) == colnames(countMatrix))
 #Set NAs to 0
 countMatrix[is.na(countMatrix)] <- 0
           
+##DESeq2 -----
 dds <- DESeqDataSetFromMatrix(countData = round(countMatrix),
                               colData = colData,
                               design = ~ group)
@@ -95,3 +96,26 @@ DEtable <- sigMirs %>%
   row_group_order(groups = c("**Up**", "**Down**"))
 
 gtsave(DEtable, "Res/tableDEmirs.png") #gtsave doesn't work on fox (no chrome)
+
+
+##PCA -----
+#Variance stabilizing transformation
+
+vsd <- varianceStabilizingTransformation(dds)
+head(assay(vsd), 3)
+
+#PCA 
+#plotPCA(vsd, intgroup="group") #use returnData=TRUE to save pca data to object
+pcaData <- plotPCA(vsd, intgroup="group", returnData=TRUE)
+percentVar <- formatC(100 * attr(pcaData, "percentVar"))
+
+#plot w/ GGplot
+PCA <- ggplot(pcaData, aes(PC1, PC2, color=group)) +
+  geom_point(size=5) +
+  xlab(paste0("PC1 (",percentVar[1],"%)")) +
+  ylab(paste0("PC2 (",percentVar[2],"%)")) +
+  stat_ellipse(geom="polygon", level=0.95, alpha=0.2) + #Add elipses 
+  coord_fixed() +
+  theme_bw()
+
+ggsave("Res/PCA2.png")

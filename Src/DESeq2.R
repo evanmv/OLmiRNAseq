@@ -82,7 +82,7 @@ myheatcolors <- brewer.pal(name="RdBu", n=11)
 ?brewer.pa1 ?filter
 DEtable <- sigMirs %>% 
   mutate(Change = ifelse(log2FoldChange > 0, 'Up', 'Down')) %>%
-  filter(log2FoldChange >=1| log2FoldChange <= -1) %>%
+  filter(log2FoldChange >=1| log2FoldChange <= -1) %>% 
   select(mirID, log2FoldChange, pvalue, Change) %>%
   gt(groupname_col = "Change") %>%
   tab_header(

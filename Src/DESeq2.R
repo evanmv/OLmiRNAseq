@@ -33,6 +33,13 @@ countMatrix[is.na(countMatrix)] <- 0
 dds <- DESeqDataSetFromMatrix(countData = round(countMatrix),
                               colData = colData,
                               design = ~ group)
+
+#Pre-filtering ??
+smallestGroupSize <- 3
+keep <- rowSums(counts(dds) >=10) >= smallestGroupSize
+dds <- dds[keep, ]
+
+#DGE analysis
 dds <- DESeq(dds)
 res <- results(dds)
 ?results()
@@ -44,10 +51,10 @@ resLFC <- lfcShrink(dds,
                     coef = "group_progressive_vs_non.progressive",
                     type = "apeglm")
 summary(resLFC)
-
+head(resLFC)
 plotMA(resLFC, ylim = c(-2,2))
 
-
+#Order and filter for sig
 resOrd <- res[order(res$pvalue),]
 resSig <- subset(resOrd, pvalue < 0.05)
 summary(resSig)
@@ -72,10 +79,11 @@ sigMirsUp <- read.csv("Res/sigMirsUp.csv")
 #GT table
 #Heatmap vector of colors
 myheatcolors <- brewer.pal(name="RdBu", n=11)
-?brewer.pa1
+?brewer.pa1 ?filter
 DEtable <- sigMirs %>% 
   mutate(Change = ifelse(log2FoldChange > 0, 'Up', 'Down')) %>%
-  select(sigMirIDs, log2FoldChange, pvalue, Change) %>%
+  filter(log2FoldChange >=1| log2FoldChange <= -1) %>%
+  select(mirID, log2FoldChange, pvalue, Change) %>%
   gt(groupname_col = "Change") %>%
   tab_header(
     title = md("**DE miRNAs in progressive Leukoplakia v non-progressive**")
@@ -95,7 +103,7 @@ DEtable <- sigMirs %>%
   ) %>%
   row_group_order(groups = c("**Up**", "**Down**"))
 
-gtsave(DEtable, "Res/tableDEmirs.png") #gtsave doesn't work on fox (no chrome)
+gtsave(DEtable, "Res/tableDEmirs2.png") #gtsave doesn't work on fox (no chrome)
 
 
 ##PCA -----

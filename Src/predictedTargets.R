@@ -15,7 +15,7 @@ targetList <- function(miRDB, TargetScan) {
   miR_TS <- read.delim(TargetScan)
   
   merge <- miR_TS %>%
-    filter(miR_TS$Target.gene %in% miR129_miRDB$'Gene Symbol')
+    filter(miR_TS$Target.gene %in% miRDB$'Gene Symbol')
   merge <- merge %>%
     filter(Cumulative.weighted.context...score < -0.5 & Aggregate.PCT > 0.5)
   

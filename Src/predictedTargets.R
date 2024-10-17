@@ -41,3 +41,5 @@ miR1247 <- targetList('1247-5p')
 df <- join_all(list(miR129, miR204, miR210, miR320, miR375, miR3065, miR1249, miR1268, miR6511, miR296, miR1306, miR483, miR4835p, miR486, miR3960, miR1247), by = 0, type = 'full')
 
 write_csv(df, "Res/miR_targetList.csv")
+
+df2 <- read_csv("Res/miR_targetList.csv")

@@ -28,7 +28,11 @@ all(row.names(colData) == colnames(countMatrix))
 
 #Set NAs to 0
 countMatrix[is.na(countMatrix)] <- 0
-          
+
+#Tibble with searchable rownames. Not necessary for processing but nice to have   
+cMt <- as_tibble(countMatrix, rownames = NA) %>%
+  rownames_to_column()
+
 ##DESeq2 -----
 dds <- DESeqDataSetFromMatrix(countData = round(countMatrix),
                               colData = colData,

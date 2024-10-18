@@ -43,3 +43,17 @@ df <- join_all(list(miR129, miR204, miR210, miR320, miR375, miR3065, miR1249, mi
 write_csv(df, "Res/miR_targetList.csv")
 
 df2 <- read_csv("Res/miR_targetList.csv")
+
+miR758 <- targetList('758-3p')
+miR424 <- targetList('424-5p')
+miR335 <- targetList('335-5p')
+miR450a <- targetList('450a-5p')
+miR5425p <- targetList('542-5p')
+miR503 <- targetList('503-5p')
+miR187 <- targetList('187-3p')
+miR450b <- targetList('450b-5p')
+miR5423p <- targetList('542-3p')
+
+df <- join_all(list(miR758, miR424, miR335, miR450a, miR450b, miR5425p, miR503, miR187, miR5423p), by = 0, type = 'full')
+
+write_csv(df, "Res/miR_targetList_UP.csv")
